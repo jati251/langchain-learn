@@ -2,12 +2,21 @@ import { MemoryVectorStore } from "@langchain/classic/vectorstores/memory";
 import { OllamaEmbeddings } from "@langchain/ollama";
 
 const embeddings = new OllamaEmbeddings({
-  model: "nomic-embed-text", 
+  model: "nomic-embed-text",
   baseUrl: "http://localhost:11434",
   requestOptions: {
     numThread: 4,
   },
 });
+
+let globalVectorStore: MemoryVectorStore | null = null;
+
+export async function getVectorStore() {
+  if (!globalVectorStore) {
+    globalVectorStore = new MemoryVectorStore(embeddings);
+  }
+  return globalVectorStore;
+}
 
 export async function getRetriever() {
   // Create the store
@@ -15,8 +24,14 @@ export async function getRetriever() {
 
   // Add some sample data (Ingestion)
   await vectorStore.addDocuments([
-    { pageContent: "The secret code for the vault is 12345.", metadata: { id: 1 } },
-    { pageContent: "Qwen3-VL 8B has a native thinking mode.", metadata: { id: 2 } },
+    {
+      pageContent: "The secret code for the vault is 12345.",
+      metadata: { id: 1 },
+    },
+    {
+      pageContent: "Qwen3-VL 8B has a native thinking mode.",
+      metadata: { id: 2 },
+    },
   ]);
 
   // Turn it into a retriever that grabs the top 2 matches

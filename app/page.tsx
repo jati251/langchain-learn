@@ -2,6 +2,7 @@
 
 import { useChat } from "@ai-sdk/react";
 import { useState, useRef, useEffect } from "react";
+import FileUploader from "./components/file-uploader";
 
 export default function ChatPage() {
   // Matching the properties from your screenshot
@@ -25,8 +26,8 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-[#050505] text-zinc-100 p-4 font-sans">
-      {/* 🟢 Status Indicator */}
+    <div className="flex flex-col h-screen bg-[#050505] text-zinc-100 p-24 font-sans">
+      <FileUploader />
       <div className="flex items-center gap-2 mb-6 px-4 py-2 bg-zinc-900/50 rounded-full w-fit border border-zinc-800">
         <div
           className={`w-2 h-2 rounded-full ${
@@ -38,7 +39,6 @@ export default function ChatPage() {
         </span>
       </div>
 
-      {/* 💬 Chat Display */}
       <div
         ref={scrollRef}
         className="flex-1 overflow-y-auto space-y-6 px-2 custom-scrollbar"
@@ -71,7 +71,6 @@ export default function ChatPage() {
         ))}
       </div>
 
-      {/* ⌨️ Input Section */}
       <form
         onSubmit={handleFormSubmit}
         className="mt-6 max-w-4xl mx-auto w-full relative"
@@ -85,7 +84,6 @@ export default function ChatPage() {
         />
 
         <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
-          {/* STOP button if it's currently streaming */}
           {status === "streaming" || status === "submitted" ? (
             <button
               type="button"
@@ -114,7 +112,6 @@ export default function ChatPage() {
         </div>
       </form>
 
-      {/* 🔄 Action Bar */}
       {messages.length > 0 && status === "ready" && (
         <div className="flex justify-center mt-4">
           <button
